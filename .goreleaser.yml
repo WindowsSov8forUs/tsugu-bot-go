@@ -23,13 +23,12 @@ builds:
     ignore:
       - goos: darwin
         goarch: 386
-
-replacements:
-  darwin: Darwin
-  linux: Linux
-  windows: Windows
-  386: i386
-  amd64: x86_64
+    replacements:
+      - darwin: Darwin
+        linux: Linux
+        windows: Windows
+        386: i386
+        amd64: x86_64
 
 archives:
   - format_overrides:
