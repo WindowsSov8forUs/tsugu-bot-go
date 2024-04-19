@@ -4,7 +4,7 @@
 
 # tsugu-bot-go
 
-_✨ 一个 Go 实现的 [TsuguBanGDreamBot](https://github.com/Yamamoto-2/tsugu-bangdream-bot) 前端整合客户端 ✨_
+_✨ 一个 Go 实现的 [TsuguBanGDreamBot](https://github.com/Yamamoto-2/tsugu-bangdream-bot) 前端整合客户端应用 ✨_
 
 </div>
 
@@ -40,7 +40,7 @@ _✨ 一个 Go 实现的 [TsuguBanGDreamBot](https://github.com/Yamamoto-2/tsugu
 
 ## 说明
 
-本项目是一个 Go 语言编写的机器人客户端程序，通过与聊天平台进行通讯交互，并向 Tsugu 官方处理后端和用户数据后端、自建 Tsugu 后端或本地数据库发送请求进行数据处理，实现几乎全部的 **[TsuguBanGDreamBot](https://github.com/Yamamoto-2/tsugu-bangdream-bot)** (以下简称为 `Tsugu` ) 功能。
+本项目是一个 Go 语言编写的机器人应用，通过与聊天平台进行通讯交互，并向 Tsugu 官方处理后端和用户数据后端、自建 Tsugu 后端或本地数据库发送请求进行数据处理，实现几乎全部的 **[TsuguBanGDreamBot](https://github.com/Yamamoto-2/tsugu-bangdream-bot)** (以下简称为 `Tsugu` ) 功能。
 
 > 目前仅实现了与 Satori 协议聊天平台进行交互，且由于历史遗留问题暂时并未实现平台间冲突隔离，请注意
 
