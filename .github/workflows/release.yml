@@ -25,9 +25,28 @@ jobs:
           args: release --rm-dist
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
+      
+      - name: Check if release exists
+        id: check_release
+        run: |
+          RELEASE_ID=$(curl --silent --show-error --header "Authorization: token ${{ secrets.PAT }}" "https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ github.ref }}" | jq '.id')
+          echo "::set-output name=release_id::$RELEASE_ID"
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+        if: steps.check_release.outputs.release_id == 'null'
 
       - name: Upload Release Assets
         run: |
+          UPLOAD_URL=$(if [ "${{ steps.check_release.outputs.release_id }}" == "null" ]; then echo "${{ steps.create_release.outputs.upload_url }}"; else echo "https://uploads.github.com/repos/${{ github.repository }}/releases/${{ steps.check_release.outputs.release_id }}/assets"; fi)
           for file in dist/*; do
             if [[ -f "$file" ]]; then
               echo "Uploading $file"
@@ -35,6 +54,6 @@ jobs:
                 --header "Authorization: token ${{ secrets.PAT }}" \
                 --header "Content-Type: $(file -b --mime-type $file)" \
                 --data-binary @"$file" \
-                "${{ github.event.release.upload_url }}?name=$(basename $file)"
+                "$UPLOAD_URL?name=$(basename $file)"
             fi
           done

@@ -23,14 +23,12 @@ builds:
     ignore:
       - goos: darwin
         goarch: 386
+    formats:
+      - binary
 
 archives:
-  - format_overrides:
-      - goos: windows
-        format: zip
-    files:
+  - files:
       - none*
-    name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}'
 
 checksum:
   name_template: 'checksums.txt'
