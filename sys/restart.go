@@ -1,7 +1,6 @@
 package sys
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -54,6 +53,6 @@ func InitBase() {
 			os.Exit(0)
 		}
 	} else {
-		fmt.Printf("InitBase function is not implemented for %s\n", runtime.GOOS)
+		return
 	}
 }

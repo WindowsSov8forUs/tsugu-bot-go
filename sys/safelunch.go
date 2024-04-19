@@ -44,10 +44,6 @@ func NoMoreDoubleClick() error {
 	if err != nil {
 		return err
 	}
-	if err != nil {
-		log.Errorf("打开 run.bat失败: %v", err)
-		return nil
-	}
 	_ = f.Truncate(0)
 
 	ex, _ := os.Executable()
