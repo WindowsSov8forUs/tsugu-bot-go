@@ -1,11 +1,32 @@
-![tsugu-bot-go logo](https://github.com/WindowsSov8forUs/tsugu-bot-go/blob/main/logo/tsugu-bot-go.png)
 <div align="center">
+
+![tsugu-bot-go logo](https://github.com/WindowsSov8forUs/tsugu-bot-go/blob/main/logo/tsugu-bot-go.png)
 
 # tsugu-bot-go
 
 _✨ 一个 Go 实现的 [TsuguBanGDreamBot](https://github.com/Yamamoto-2/tsugu-bangdream-bot) 前端整合客户端 ✨_
 
 </div>
+
+<p align="center">
+
+<a href="https://github.com/Yamamoto-2/tsugu-bangdream-bot">
+  <img src="https://img.shields.io/badge/tsugu bangdream bot-v2 api-FFEE88" alt="license">
+</a>
+
+<a href="https://github.com/WindowsSov8forUs/tsugu-bot-go">
+  <img src="https://img.shields.io/github/v/release/WindowsSov8forUs/tsugu-bot-go" alt="Latest Release Version">
+</a>
+
+<a href="https://github.com/WindowsSov8forUs/tsugu-bot-go/blob/main/LICENSE">
+  <img src="https://img.shields.io/github/license/WindowsSov8forUs/tsugu-bot-go" alt="License">
+</a>
+
+<a href="https://golang.org/dl/">
+  <img src="https://img.shields.io/github/go-mod/go-version/WindowsSov8forUs/tsugu-bot-go" alt="Go Version">
+</a>
+
+</p>
 
 ## 引用
 
