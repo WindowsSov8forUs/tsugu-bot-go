@@ -24,7 +24,7 @@ jobs:
           version: latest
           args: release --rm-dist
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT }}
 
       - name: Upload Release Assets
         run: |
@@ -32,7 +32,7 @@ jobs:
             if [[ -f "$file" ]]; then
               echo "Uploading $file"
               curl \
-                --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                --header "Authorization: token ${{ secrets.PAT }}" \
                 --header "Content-Type: $(file -b --mime-type $file)" \
                 --data-binary @"$file" \
                 "${{ github.event.release.upload_url }}?name=$(basename $file)"
