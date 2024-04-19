@@ -51,11 +51,15 @@ jobs:
           UPLOAD_URL=$(if [ "${{ env.RELEASE_ID }}" == "null" ]; then echo "${{ steps.create_release.outputs.upload_url }}"; else echo "https://uploads.github.com/repos/${{ github.repository }}/releases/${{ env.RELEASE_ID }}/assets"; fi)
           for file in dist/*; do
             if [[ -f "$file" ]]; then
-              echo "Uploading $file"
-              curl \
-                --header "Authorization: token ${{ secrets.PAT }}" \
-                --header "Content-Type: $(file -b --mime-type $file)" \
-                --data-binary @"$file" \
-                "$UPLOAD_URL?name=$(basename $file)"
+              filename=$(basename -- "$file")
+              extension="${filename##*.}"
+              if [[ "$extension" == "exe" || "$extension" == "tar.gz" ]]; then
+                echo "Uploading $file"
+                curl \
+                  --header "Authorization: token ${{ secrets.PAT }}" \
+                  --header "Content-Type: $(file -b --mime-type $file)" \
+                  --data-binary @"$file" \
+                  "$UPLOAD_URL?name=$(basename $file)"
+              fi
             fi
           done
