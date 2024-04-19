@@ -4,7 +4,7 @@
 
 # tsugu-bot-go
 
-_✨ 一个 Go 实现的 [TsuguBanGDreamBot](https://github.com/Yamamoto-2/tsugu-bangdream-bot) 前端整合客户端应用 ✨_
+_✨ 一个 Go 实现的 [TsuguBanGDreamBot](https://github.com/Yamamoto-2/tsugu-bangdream-bot) 前端整合机器人应用 ✨_
 
 </div>
 
