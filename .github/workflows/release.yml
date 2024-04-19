@@ -30,7 +30,7 @@ jobs:
         id: check_release
         run: |
           RELEASE_ID=$(curl --silent --show-error --header "Authorization: token ${{ secrets.PAT }}" "https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ github.ref }}" | jq '.id')
-          echo "::set-output name=release_id::$RELEASE_ID"
+          echo "RELEASE_ID=$RELEASE_ID" >> $GITHUB_ENV
 
       - name: Create Release
         id: create_release
@@ -42,11 +42,11 @@ jobs:
           release_name: Release ${{ github.ref }}
           draft: false
           prerelease: false
-        if: steps.check_release.outputs.release_id == 'null'
+        if: env.RELEASE_ID == 'null'
 
       - name: Upload Release Assets
         run: |
-          UPLOAD_URL=$(if [ "${{ steps.check_release.outputs.release_id }}" == "null" ]; then echo "${{ steps.create_release.outputs.upload_url }}"; else echo "https://uploads.github.com/repos/${{ github.repository }}/releases/${{ steps.check_release.outputs.release_id }}/assets"; fi)
+          UPLOAD_URL=$(if [ "${{ env.RELEASE_ID }}" == "null" ]; then echo "${{ steps.create_release.outputs.upload_url }}"; else echo "https://uploads.github.com/repos/${{ github.repository }}/releases/${{ env.RELEASE_ID }}/assets"; fi)
           for file in dist/*; do
             if [[ -f "$file" ]]; then
               echo "Uploading $file"
