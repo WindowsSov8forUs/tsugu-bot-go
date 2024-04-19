@@ -23,8 +23,6 @@ builds:
     ignore:
       - goos: darwin
         goarch: 386
-    format: binary
-    binary: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}'
 
 archives:
   - files:
