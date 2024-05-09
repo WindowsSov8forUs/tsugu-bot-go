@@ -143,5 +143,5 @@ satori: # Satori 配置
   version: 1 # Satori 版本，目前只有 1
   path: "" # Satori 部署路径，可以为空，如果不为空需要以 / 开头
   token: "" # 鉴权令牌，如果不设置则不会进行鉴权
-  host: "http://127.0.0.1" # 主机地址
+  host: "127.0.0.1" # 主机地址
   port: 5140 # 端口
