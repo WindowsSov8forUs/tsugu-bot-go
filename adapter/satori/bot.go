@@ -78,15 +78,8 @@ func (bot *Bot) Send(session adapter.Session, message *adapter.Message) error {
 		}
 	}
 	sess := session.GetSession().(*Session)
-	quote := &satoriMessage.MessageElementQuote{
-		ChildrenMessageElement: &satoriMessage.ChildrenMessageElement{
-			Children: []satoriMessage.MessageElement{
-				&satoriMessage.MessageElementMessage{
-					Id: sess.Data.Message.Id,
-				},
-			},
-		},
-	}
+	quote := &satoriMessage.MessageElementQuote{}
+	quote.AddAttribute("id", sess.Data.Message.Id)
 	elements = append([]satoriMessage.MessageElement{quote}, elements...)
 	log.Infof("<Satori> 发送消息至 %s : %s", session.ChannelID(), logContent)
 
