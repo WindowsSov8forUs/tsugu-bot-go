@@ -52,8 +52,14 @@ func main() {
 	}
 
 	if conf.Tsugu.UserDataBasePath != "" {
-		log.Infof("<Tsugu> 已加载本地用户数据库路径: %s", conf.Tsugu.UserDataBasePath)
-		tsugu.DataBase(conf)
+		log.Infof("<Tsugu> 正在加载本地用户数据库路径: %s", conf.Tsugu.UserDataBasePath)
+		err := tsugu.DataBase(conf)
+		if err != nil {
+			log.Errorf("<Tsugu> 加载本地用户数据库时出错: %v", err)
+			conf.Tsugu.UserDataBasePath = ""
+		} else {
+			log.Info("<Tsugu> 本地用户数据库已加载")
+		}
 	}
 
 	var satoriClient *satori.Client

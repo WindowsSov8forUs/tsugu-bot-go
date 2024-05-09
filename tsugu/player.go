@@ -53,7 +53,10 @@ func (db *UserDataDB) saveUserData(userData *UserData) error {
 func GetUserData(platform, userID string) (*ResponseUserData, error) {
 	userData, err := userDataBaseInstance.getUserData(platform, userID)
 	if err != nil {
-		return nil, err
+		return &ResponseUserData{
+			Status: "failure",
+			Data:   nil,
+		}, nil
 	}
 	return &ResponseUserData{
 		Status: "success",
