@@ -53,10 +53,22 @@ func (db *UserDataDB) saveUserData(userData *UserData) error {
 func GetUserData(platform, userID string) (*ResponseUserData, error) {
 	userData, err := userDataBaseInstance.getUserData(platform, userID)
 	if err != nil {
-		return &ResponseUserData{
-			Status: "failure",
-			Data:   nil,
-		}, nil
+		if err == leveldb.ErrNotFound {
+			return &ResponseUserData{
+				Status: "failure",
+				Data: &UserData{
+					UserID:        userID,
+					Platform:      platform,
+					ServerMode:    3,
+					DefaultServer: []int{3},
+					Car:           true,
+					GameIDs:       []*GameID{},
+					VerifyCode:    "",
+				},
+			}, nil
+		} else {
+			return nil, err
+		}
 	}
 	return &ResponseUserData{
 		Status: "success",
