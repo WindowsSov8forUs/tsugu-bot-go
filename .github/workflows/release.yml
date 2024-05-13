@@ -18,9 +18,6 @@ jobs:
       - name: Check out code into the Go module directory
         uses: actions/checkout@v2
       
-      - name: Install dependencies
-        run: go get github.com/akavel/rsrc
-
       - name: Build binaries
         uses: goreleaser/goreleaser-action@v2
         with:
