@@ -300,7 +300,7 @@ tsugu: # Tsugu 机器人配置
 </details>
 
 <details>
-<summary>功能启用配置 functions</summary>
+<summary>指令别名配置 command_alias</summary>
 
 #### 指令别名配置 `command_alias`
 
