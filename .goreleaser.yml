@@ -4,6 +4,7 @@ before:
     - go mod tidy
     - go generate ./...
     - go get github.com/akavel/rsrc
+    - which rsrc
     - rsrc -ico ./logo/icon.ico -o internal/ico.syso
 
 builds:
