@@ -1,9 +1,8 @@
 package tsugu
 
 import (
-	"net/http"
-	"net/url"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -35,69 +34,50 @@ func submitCarMessage(session adapter.Session, bot adapter.Bot, conf *config.Con
 	}
 
 	// 匹配车牌号
-	carPattern := regexp.MustCompile(`^\d{5}(\D|$)|^\d{6}(\D|$)`)
+	carPattern := regexp.MustCompile(`^\d{5}|^\d{6}`)
 	if !carPattern.MatchString(message) {
 		return false, nil
 	}
 
 	platform := session.Platform()
-	var userData *ResponseUserData
-	var err error
-	if conf.Tsugu.UserDataBasePath == "" {
-		userData, err = remoteGetUserData(platform, session.UserID(), conf)
-	} else {
-		userData, err = GetUserData(platform, session.UserID())
-	}
+	car, err := getCarForward(platform, session.UserID(), conf)
 	if err != nil {
 		log.Warnf("<Tsugu> 获取用户数据失败: %v", err)
 	} else {
-		if !userData.Data.Car {
+		if !car {
 			return false, nil
 		}
 	}
 
 	// 获取车牌号
-	carID := carPattern.FindString(message)
-
-	// 构建 URL
-	params := url.Values{}
-	params.Add("function", "submit_room_number")
-	params.Add("number", carID)
-	params.Add("user_id", session.UserID())
-	params.Add("raw_message", session.Message())
-	params.Add("source", conf.Tsugu.CarStation.TokenName)
-	params.Add("token", conf.Tsugu.CarStation.BandoriStationToken)
-	stationURL := "https://api.bandoristation.com/index.php?" + params.Encode()
-
-	var transport *http.Transport
-	if conf.Tsugu.CarStation.UseProxy {
-		proxyURL, _ := url.Parse(conf.Tsugu.Proxy)
-		transport = &http.Transport{
-			Proxy: http.ProxyURL(proxyURL),
-		}
-	} else {
-		transport = &http.Transport{
-			Proxy: nil,
-		}
-	}
-
-	client := &http.Client{
-		Transport: transport,
-	}
-	if conf.Tsugu.Timeout > 0 {
-		client.Timeout = time.Duration(conf.Tsugu.Timeout) * time.Second
-	}
-
-	response, err := client.Get(stationURL)
+	carID, err := strconv.Atoi(carPattern.FindString(message))
 	if err != nil {
 		return true, err
 	}
-	defer response.Body.Close()
 
-	if response.StatusCode != http.StatusOK {
-		log.Warnf("<Tsugu> 提交车牌号失败: %v", response.StatusCode)
+	// 构建请求
+	request := &RequestSubmitRoomNumber{
+		Number:     carID,
+		RawMessage: message,
+		Platform:   session.Platform(),
+		UserID:     session.UserID(),
+		UserName:   session.UserName(),
+		Time:       time.Now().Unix(),
+	}
+	if conf.Tsugu.CarStation.BandoriStationToken != "" {
+		request.BandoriStationToken = conf.Tsugu.CarStation.BandoriStationToken
+	}
+
+	response, err := submitRoomNumber(request, conf)
+
+	if err != nil {
+		return true, err
+	}
+
+	if response.Status == STATUS_FAILED {
+		log.Warnf("<Tsugu> 提交车牌号失败，%v", response.Data)
 	} else {
-		log.Infof("<Tsugu> 提交车牌号成功: %s", carID)
+		log.Infof("<Tsugu> 提交车牌号成功: %v", carID)
 		if conf.Tsugu.CarStation.ForwardResponse {
 			if conf.Tsugu.CarStation.ResponseContent == "" {
 				forwardMessage := &adapter.Message{}

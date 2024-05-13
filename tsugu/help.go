@@ -1,6 +1,8 @@
 package tsugu
 
 import (
+	"strings"
+
 	"github.com/WindowsSov8forUs/tsugu-bot-go/adapter"
 	log "github.com/WindowsSov8forUs/tsugu-bot-go/mylog"
 )
@@ -145,6 +147,8 @@ func helpCommand(session adapter.Session, command string, bot adapter.Bot) error
 	if command == "" {
 		return nil
 	}
+	command = strings.TrimSpace(command)
+
 	help := helpDoc(command)
 	if help != "" {
 		log.Infof("<Tsugu> 发送帮助信息: %s", command)
