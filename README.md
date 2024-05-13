@@ -52,7 +52,7 @@ _✨ 一个 Go 实现的 [TsuguBanGDreamBot](https://github.com/Yamamoto-2/tsugu
 
 - [ ] 多群组的机器人总开关
 - [ ] 运行过程中的功能开关配置
-- [ ] 指令的别名配置
+- [x] 指令的别名配置
 
 ## 使用
 
@@ -110,6 +110,9 @@ satori: # Satori 配置
 ```yaml
 tsugu: # Tsugu 机器人配置
   require_at: false # 是否需要 at 才能触发指令
+  reply: true # 是否回复消息
+  at: false # 是否 at 发送者
+  no_space: false # 是否不需要指令头后空格
   timeout: 10 # 超时时间，单位为秒
   proxy: "" # 代理地址，如果不使用代理请留空
   use_easy_bg: true # 是否使用简单背景，若关闭可能会减慢处理速度
@@ -146,12 +149,15 @@ tsugu: # Tsugu 机器人配置
 ```
 
 - `require_at`: 指定是否需要 at 才能触发指令；当为 `true` 时，仅 at 机器人的消息可以触发指令。
+- `reply`: 指定发送消息时是否回复对应的消息。
+- `at`: 指定发送消息时是否 @ 对应的发送者，在部分平台中回复并不总是携带 @ 。
+- `no_space`: 指定是否启用无需空格触发大部分指令，启用这将方便一些用户使用习惯，但会增加 bot 误判概率，仍然建议使用空格。
 - `timeout`: 指定后端请求超时时间；当为 `0` 时，将长时间等待后端响应直到连接关闭。建议设置范围在 `15-30` 之间。
 - `proxy`: 代理服务器地址，所有的请求当需要经过代理服务器时都会经过该服务器地址。当需要通过代理服务器才能够访问后端服务器时，通过该项配置配合子配置项中的 `use_proxy` 进行配置。
 - `use_easy_bg`: 是否使用简单背景。使用简单背景可以一定程度上减少后端响应耗时，若对生成图片没有特殊要求建议开启。
 - `compress`: 是否压缩图片。压缩图片可以一定程度上减少响应传输所用流量以及图片发送所需耗时，若对生成图片的质量没有特殊要求建议开启。
 - `user_database_path`: 本地用户数据库路径；当为空时将使用 `user_data_backend` 中配置的用户数据库后端。需要注意的是，各用户数据库以及本地用户数据库之间不会进行数据统一，请酌情配置。
-- `ban_gacha_simulate`: 禁止使用 `抽卡模拟` 功能的群组，填入群组 ID 以配置。无法在运行过程中配置，因此每次更改都需要重启 tsugu-bot-go 以应用配置。
+- `ban_gacha_simulate`: 禁止使用 `抽卡模拟` 功能的群组，填入群组 ID 以配置。可以在运行过程中配置，但无法保存至文件中，且在文件中的配置更改不会立马反馈到应用中，因此每次更改都需要重启 tsugu-bot-go 以应用配置。
 
 <details>
 <summary>车站配置 car_station</summary>
@@ -164,16 +170,12 @@ tsugu: # Tsugu 机器人配置
 
 ```yaml
   car_station: # 车站配置
-    token_name: "Tsugu" # 车站令牌名称
-    bandori_station_token: "ZtV4EX2K9Onb" # BanG Dream! 车站令牌
-    use_proxy: false # 是否使用代理
+    bandori_station_token: "" # BanG Dream! 车站令牌
     forward_response: false # 是否转发响应
     response_content: "" # 响应内容，只有在转发响应为 true 时有效
 ```
 
-- `token_name`: 车站转发所需令牌名称。若没有自己的令牌，可维持默认值不变。
-- `bandori_station_token`: 车站转发所需令牌。若没有自己的令牌，可维持默认值不变。
-- `use_proxy`: 是否使用代理。若发现机器人所在网络环境无法直接访问车站，可使用代理服务器访问。
+- `bandori_station_token`: 车站转发所需令牌。若没有自己的令牌，可不填，将会默认使用 Tsugu 的令牌。
 - `forward_response`: 是否在转发成功后进行响应。若为 `true` 则将会在转发成功后回复车牌所在消息，否则将会保持静默。
 - `response_content`: 仅当 `forward_response` 为 `true` 时有效，可用于自定义转发成功后的回复消息。此时若此配置留空，则会回复默认的转发成功消息。
 
@@ -294,6 +296,44 @@ tsugu: # Tsugu 机器人配置
 - `lsycx`: 活动的历史预测线。
 - `ycm`: 有车吗？/查询车站车牌号。
 - `card`: 查卡。
+
+</details>
+
+<details>
+<summary>功能启用配置 functions</summary>
+
+#### 指令别名配置 `command_alias`
+
+`command_alias` 子配置项用于对 tsugu-bot-go 的指令进行别名配置。其中每个子配置项都是一个字符串列表。
+
+配置结构如下：
+
+```yaml
+  command_alias: # 指令别名
+    switch_gacha_simulate: [] # 开关本群抽卡模拟
+    open_car_forward: [] # 开启车牌转发
+    close_car_forward: [] # 关闭车牌转发
+    bind_player: [] # 绑定玩家
+    unbind_player: [解绑玩家] # 解绑玩家
+    change_main_server: [服务器模式, 切换服务器] # 切换主服务器
+    change_server_list: [默认服务器] # 设置默认服务器
+    player_status: [] # 玩家状态
+    ycm: [有车吗, 车来] # 有车吗
+    search_player: [查询玩家] # 玩家信息
+    search_card: [查卡牌] # 查卡
+    card_illustration: [查卡插画, 查插画] # 查卡面
+    search_character: [] # 查角色
+    search_event: [] # 查活动
+    search_song: [] # 查歌曲
+    search_chart: [] # 查谱面
+    song_meta: [查分数表, 查询分数榜, 查分数榜] # 查询分数表
+    event_stage: [查stage, 查舞台, 查festival, 查5v5] # 查活动试炼
+    search_gacha: [] # 查卡池
+    ycx: [] # ycx
+    ycx_all: [myycx] # ycxall
+    lsycx: [] # lsycx
+    gacha_simulatie: [] # 抽卡模拟
+```
 
 </details>
 
