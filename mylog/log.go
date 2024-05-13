@@ -148,7 +148,7 @@ func Fatalf(format string, v ...interface{}) {
 
 // logger 实例的 Error 方法
 func (logger *Logger) Error(v ...interface{}) {
-	logger.Println(DEBUG, v...)
+	logger.Println(ERROR, v...)
 }
 
 // Error 错误
@@ -158,7 +158,7 @@ func Error(v ...interface{}) {
 
 // logger 实例的 Errorf 方法
 func (logger *Logger) Errorf(format string, v ...interface{}) {
-	logger.Println(DEBUG, fmt.Sprintf(format, v...))
+	logger.Println(ERROR, fmt.Sprintf(format, v...))
 }
 
 // Errorf 错误
@@ -168,7 +168,7 @@ func Errorf(format string, v ...interface{}) {
 
 // logger 实例的 Warn 方法
 func (logger *Logger) Warn(v ...interface{}) {
-	logger.Println(DEBUG, v...)
+	logger.Println(WARN, v...)
 }
 
 // Warn 警告
@@ -178,7 +178,7 @@ func Warn(v ...interface{}) {
 
 // logger 实例的 Warnf 方法
 func (logger *Logger) Warnf(format string, v ...interface{}) {
-	logger.Println(DEBUG, fmt.Sprintf(format, v...))
+	logger.Println(WARN, fmt.Sprintf(format, v...))
 }
 
 // Warnf 警告
@@ -188,7 +188,7 @@ func Warnf(format string, v ...interface{}) {
 
 // logger 实例的 Info 方法
 func (logger *Logger) Info(v ...interface{}) {
-	logger.Println(DEBUG, v...)
+	logger.Println(INFO, v...)
 }
 
 // Info 信息
@@ -198,7 +198,7 @@ func Info(v ...interface{}) {
 
 // logger 实例的 Infof 方法
 func (logger *Logger) Infof(format string, v ...interface{}) {
-	logger.Println(DEBUG, fmt.Sprintf(format, v...))
+	logger.Println(INFO, fmt.Sprintf(format, v...))
 }
 
 // Infof 信息
