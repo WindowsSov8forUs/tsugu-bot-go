@@ -19,10 +19,15 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Set up environment
-        run: echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
+        run: |
+          echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
+          echo $PATH
       
       - name: Build binaries
         uses: goreleaser/goreleaser-action@v2
+        run: |
+          which rsrc
+          goreleaser release --rm-dist
         with:
           version: latest
           args: release --rm-dist
