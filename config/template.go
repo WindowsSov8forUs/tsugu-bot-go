@@ -16,6 +16,9 @@ log_level: 4
 
 tsugu: # Tsugu 机器人配置
   require_at: false # 是否需要 at 才能触发指令
+  reply: true # 是否回复消息
+  at: false # 是否 at 发送者
+  no_space: false # 是否不需要指令头后空格
   timeout: 10 # 超时时间，单位为秒
   proxy: "" # 代理地址，如果不使用代理请留空
   use_easy_bg: true # 是否使用简单背景，若关闭可能会减慢处理速度
@@ -31,9 +34,7 @@ tsugu: # Tsugu 机器人配置
   ban_gacha_simulate: []
 
   car_station: # 车站配置
-    token_name: "Tsugu" # 车站令牌名称
-    bandori_station_token: "ZtV4EX2K9Onb" # BanG Dream! 车站令牌
-    use_proxy: false # 是否使用代理
+    bandori_station_token: "" # BanG Dream! 车站令牌
     forward_response: false # 是否转发响应
     response_content: "" # 响应内容，只有在转发响应为 true 时有效
 
@@ -53,25 +54,52 @@ tsugu: # Tsugu 机器人配置
     # 若关闭则不会处理相关功能
     help: true # 帮助文档
     car_forward: true # 车牌转发
-    change_main_server: true # 切换主服务器
+    switch_gacha_simulate: true # 开关本群抽卡模拟
     switch_car_forward: true # 是否允许指令开启车牌转发
     bind_player: true # 绑定玩家
+    change_main_server: true # 切换主服务器
     change_server_list: true # 切换服务器列表
     player_status: true # 玩家状态
+    ycm: true # 有车吗
+    search_player: true # 玩家信息
+    search_card: true # 查卡
     card_illustration: true # 查卡面
-    player: true # 玩家信息
-    gacha_simulatie: true # 抽卡模拟
-    gacha: true # 查卡池
-    event: true # 查活动
-    song: true # 查歌曲
+    search_character: true # 查角色
+    search_event: true # 查活动
+    search_song: true # 查歌曲
+    search_chart: true # 查谱面
     song_meta: true # 查询分数表
-    character: true # 查角色
-    chart: true # 查谱面
+    event_stage: true # 查活动试炼
+    search_gacha: true # 查卡池
     ycx: true # ycx
     ycx_all: true # ycxall
     lsycx: true # lsycx
-    ycm: true # 有车吗
-    card: true # 查卡
+    gacha_simulatie: true # 抽卡模拟
+  
+  command_alias: # 指令别名
+    switch_gacha_simulate: [] # 开关本群抽卡模拟
+    open_car_forward: [] # 开启车牌转发
+    close_car_forward: [] # 关闭车牌转发
+    bind_player: [] # 绑定玩家
+    unbind_player: [解绑玩家] # 解绑玩家
+    change_main_server: [服务器模式, 切换服务器] # 切换主服务器
+    change_server_list: [默认服务器] # 设置默认服务器
+    player_status: [] # 玩家状态
+    ycm: [有车吗, 车来] # 有车吗
+    search_player: [查询玩家] # 玩家信息
+    search_card: [查卡牌] # 查卡
+    card_illustration: [查卡插画, 查插画] # 查卡面
+    search_character: [] # 查角色
+    search_event: [] # 查活动
+    search_song: [] # 查歌曲
+    search_chart: [] # 查谱面
+    song_meta: [查分数表, 查询分数榜, 查分数榜] # 查询分数表
+    event_stage: [查stage, 查舞台, 查festival, 查5v5] # 查活动试炼
+    search_gacha: [] # 查卡池
+    ycx: [] # ycx
+    ycx_all: [myycx] # ycxall
+    lsycx: [] # lsycx
+    gacha_simulatie: [] # 抽卡模拟
 
   car_config: # 车牌转发配置
     car: # 有效车牌关键词

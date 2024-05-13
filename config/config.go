@@ -26,6 +26,9 @@ type Config struct {
 // Tsugu Tsugu 配置
 type Tsugu struct {
 	RequireAt        bool            `yaml:"require_at"` // 是否需要 @
+	Reply            bool            `yaml:"reply"`      // 是否回复用户
+	At               bool            `yaml:"at"`         // 是否 @ 用户
+	NoSpace          bool            `yaml:"no_space"`   // 是否无需空格
 	Timeout          int             `yaml:"timeout"`    // 超时
 	Proxy            string          `yaml:"proxy"`      // 代理
 	UseEasyBG        bool            `yaml:"use_easy_bg"`
@@ -37,7 +40,32 @@ type Tsugu struct {
 	Backend          Backend         `yaml:"backend"`
 	UserDataBackend  UserDataBackend `yaml:"user_data_backend"`
 	Functions        Functions       `yaml:"functions"`
+	CommandAlias     CommandAlias    `yaml:"command_alias"`
 	CarConfig        CarConfig       `yaml:"car_config"`
+}
+
+func (tsugu *Tsugu) RemoveBanList(channelId string) {
+	mutex.Lock()
+	defer mutex.Unlock()
+
+	for i, v := range tsugu.BanGachaSimulate {
+		if v == channelId {
+			tsugu.BanGachaSimulate = append(tsugu.BanGachaSimulate[:i], tsugu.BanGachaSimulate[i+1:]...)
+			return
+		}
+	}
+}
+
+func (tsugu *Tsugu) AddBanList(channelId string) {
+	mutex.Lock()
+	defer mutex.Unlock()
+
+	for _, v := range tsugu.BanGachaSimulate {
+		if v == channelId {
+			return
+		}
+	}
+	tsugu.BanGachaSimulate = append(tsugu.BanGachaSimulate, channelId)
 }
 
 // Backend 后端配置
@@ -54,9 +82,7 @@ type UserDataBackend struct {
 
 // CarStation 车站配置
 type CarStation struct {
-	TokenName           string `yaml:"token_name"`            // 令牌名称
 	BandoriStationToken string `yaml:"bandori_station_token"` // 车站令牌
-	UseProxy            bool   `yaml:"use_proxy"`             // 使用代理
 	ForwardResponse     bool   `yaml:"forward_response"`      // 转发响应
 	ResponseContent     string `yaml:"response_content"`      // 响应内容
 }
@@ -68,27 +94,54 @@ type VerifyPlayer struct {
 
 // Functions 功能开关配置
 type Functions struct {
-	Help             bool `yaml:"help"`               // 帮助文档
-	CarForward       bool `yaml:"car_forward"`        // 车牌转发
-	ChangeMainServer bool `yaml:"change_main_server"` // 切换主服务器
-	SwitchCarForward bool `yaml:"switch_car_forward"` // 是否允许指令开启车牌转发
-	BindPlayer       bool `yaml:"bind_player"`        // 绑定玩家
-	ChangeServerList bool `yaml:"change_server_list"` // 切换服务器列表
-	PlayerStatus     bool `yaml:"player_status"`      // 玩家状态
-	CardIllustration bool `yaml:"card_illustration"`  // 查卡面
-	Player           bool `yaml:"player"`             // 玩家信息
-	GachaSimulate    bool `yaml:"gacha_simulate"`     // 模拟抽卡
-	Gacha            bool `yaml:"gacha"`              // 查卡池
-	Event            bool `yaml:"event"`              // 查活动
-	Song             bool `yaml:"song"`               // 查歌曲
-	SongMeta         bool `yaml:"song_meta"`          // 查询分数表
-	Character        bool `yaml:"character"`          // 查角色
-	Chart            bool `yaml:"chart"`              // 查谱面
-	YcxAll           bool `yaml:"ycx_all"`            // ycxall
-	Ycx              bool `yaml:"ycx"`                // ycx
-	Lsycx            bool `yaml:"lsycx"`              // lsycx
-	Ycm              bool `yaml:"ycm"`                // ycm
-	Card             bool `yaml:"card"`               // 查卡
+	Help                bool `yaml:"help"`                  // 帮助文档
+	CarForward          bool `yaml:"car_forward"`           // 车牌转发
+	SwitchGachaSimulate bool `yaml:"switch_gacha_simulate"` // 开关本群抽卡模拟
+	SwitchCarForward    bool `yaml:"switch_car_forward"`    // 是否允许指令开启车牌转发
+	BindPlayer          bool `yaml:"bind_player"`           // 绑定玩家
+	ChangeMainServer    bool `yaml:"change_main_server"`    // 切换主服务器
+	ChangeServerList    bool `yaml:"change_server_list"`    // 切换服务器列表
+	PlayerStatus        bool `yaml:"player_status"`         // 玩家状态
+	Ycm                 bool `yaml:"ycm"`                   // 获取车牌
+	SearchPlayer        bool `yaml:"search_player"`         // 玩家信息
+	SearchCard          bool `yaml:"search_card"`           // 查卡
+	CardIllustration    bool `yaml:"card_illustration"`     // 查卡面
+	SearchCharacter     bool `yaml:"search_character"`      // 查角色
+	SearchEvent         bool `yaml:"search_event"`          // 查活动
+	SearchSong          bool `yaml:"search_song"`           // 查歌曲
+	SearchChart         bool `yaml:"search_chart"`          // 查谱面
+	SongMeta            bool `yaml:"song_meta"`             // 查询分数表
+	EventStage          bool `yaml:"event_stage"`           // 查活动试炼
+	SearchGacha         bool `yaml:"search_gacha"`          // 查卡池
+	Ycx                 bool `yaml:"ycx"`                   // 预测线
+	YcxAll              bool `yaml:"ycx_all"`               // 全部预测线
+	Lsycx               bool `yaml:"lsycx"`                 // 历史预测线
+	GachaSimulate       bool `yaml:"gacha_simulate"`        // 模拟抽卡
+}
+
+type CommandAlias struct {
+	SwitchGachaSimulate []string `yaml:"switch_gacha_simulate"` // 开关本群抽卡模拟
+	OpenCarForward      []string `yaml:"open_car_forward"`      // 开启车牌转发
+	CloseCarForward     []string `yaml:"close_car_forward"`     // 关闭车牌转发
+	BindPlayer          []string `yaml:"bind_player"`           // 绑定玩家
+	UnbindPlayer        []string `yaml:"unbind_player"`         // 解绑玩家
+	ChangeMainServer    []string `yaml:"change_main_server"`    // 切换主服务器
+	ChangeServerList    []string `yaml:"change_server_list"`    // 设置默认服务器
+	Ycm                 []string `yaml:"ycm"`                   // 有车吗
+	SearchPlayer        []string `yaml:"search_player"`         // 玩家信息
+	SearchCard          []string `yaml:"search_card"`           // 查卡
+	CardIllustration    []string `yaml:"card_illustration"`     // 查卡面
+	SearchCharacter     []string `yaml:"search_character"`      // 查角色
+	SearchEvent         []string `yaml:"search_event"`          // 查活动
+	SearchSong          []string `yaml:"search_song"`           // 查歌曲
+	SearchChart         []string `yaml:"search_chart"`          // 查谱面
+	SongMeta            []string `yaml:"song_meta"`             // 查询分数表
+	EventStage          []string `yaml:"event_stage"`           // 查活动试炼
+	SearchGacha         []string `yaml:"search_gacha"`          // 查卡池
+	Ycx                 []string `yaml:"ycx"`                   // ycx
+	YcxAll              []string `yaml:"ycx_all"`               // ycxall
+	Lsycx               []string `yaml:"lsycx"`                 // lsycx
+	GachaSimulate       []string `yaml:"gacha_simulate"`        // 抽卡模拟
 }
 
 // CarConfig 车牌设置
