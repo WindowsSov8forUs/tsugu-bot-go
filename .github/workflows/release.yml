@@ -25,9 +25,6 @@ jobs:
       
       - name: Build binaries
         uses: goreleaser/goreleaser-action@v2
-        run: |
-          which rsrc
-          goreleaser release --rm-dist
         with:
           version: latest
           args: release --rm-dist
