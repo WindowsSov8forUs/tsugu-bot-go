@@ -1,6 +1,7 @@
 # .goreleaser.yml
 before:
   hooks:
+    - mkdir -p internal
     - go mod tidy
     - go generate ./...
     - go install github.com/akavel/rsrc@latest
