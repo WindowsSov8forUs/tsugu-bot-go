@@ -3,6 +3,7 @@ package adapter
 type Session interface {
 	Message() string
 	UserID() string
+	UserName() string
 	Platform() string
 	ChannelID() string
 	GetSession() interface{}

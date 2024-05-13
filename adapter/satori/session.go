@@ -33,6 +33,18 @@ func (s *Session) UserID() string {
 	return s.Data.User.Id
 }
 
+func (s *Session) UserName() string {
+	if s.Data.Member != nil && s.Data.Member.Nick != "" {
+		return s.Data.Member.Nick
+	} else {
+		if s.Data.User != nil {
+			return s.Data.User.Name
+		} else {
+			return "Unknown"
+		}
+	}
+}
+
 func (s *Session) Platform() string {
 	return "red"
 }
