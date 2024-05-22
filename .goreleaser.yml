@@ -6,7 +6,7 @@ before:
     - go generate ./...
     - go install github.com/akavel/rsrc@latest
     - which rsrc
-    - rsrc -ico ./icon.ico -o ./ico.syso
+    - rsrc -ico ./logo/icon.ico -o ./ico.syso
 
 builds:
   - id: nowin
