@@ -6,36 +6,69 @@ before:
     - go generate ./...
     - go install github.com/akavel/rsrc@latest
     - which rsrc
-    - rsrc -ico ./logo/icon.ico -o internal/ico.syso
+    - rsrc -ico ./icon.ico -o ./ico.syso
 
 builds:
-  - env:
+  - id: nowin
+    env:
       - CGO_ENABLED=0
+      - GO111MODULE=on
     goos:
       - linux
-      - windows
       - darwin
     goarch:
+      - '386'
       - amd64
-      - 386
+      - arm
+      - arm64
     goarm:
-      - 6
+      - '7'
     flags:
       - -trimpath
     ldflags:
       - -s -w
     ignore:
       - goos: darwin
-        goarch: 386
+        goarch: arm
+      - goos: darwin
+        goarch: '386'
+  - id: win
+    env:
+      - CGO_ENABLED=0
+      - GO111MODULE=on
+    goos:
+      - windows
+    goarch:
+      - '386'
+      - amd64
+      - arm
+      - arm64
+    goarm:
+      - '7'
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w
 
 archives:
-  - name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
+  - id: binary
+    builds:
+      - win
+    name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
     format_overrides:
       - goos: windows
         format: binary
+  - id: nowin
+    builds:
+      - nowin
+      - win
+    name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}"
+    format_overrides:
+      - goos: windows
+        format: zip
 
 checksum:
-  name_template: 'checksums.txt'
+  name_template: "{{ .ProjectName }}_checksums.txt"
 
 snapshot:
   name_template: "{{ .Tag }}-{{ .Commit }}"
