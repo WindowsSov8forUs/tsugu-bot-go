@@ -19,7 +19,7 @@ require (
 	github.com/gorilla/websocket v1.5.1
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
-	github.com/satori-protocol-go/satori-model-go v0.0.9
+	github.com/satori-protocol-go/satori-model-go v0.0.10
 	github.com/syndtr/goleveldb v1.0.0
 	golang.org/x/sys v0.14.0
 )

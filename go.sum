@@ -28,6 +28,8 @@ github.com/rogpeppe/go-internal v1.9.0 h1:73kH8U+JUqXU8lRuOHeVHaa/SZPifC7BkcraZV
 github.com/rogpeppe/go-internal v1.9.0/go.mod h1:WtVeX8xhTBvf0smdhujwtBcq4Qrzq/fJaraNFVN+nFs=
 github.com/satori-protocol-go/satori-model-go v0.0.9 h1:7efR8LmvQ6t5r1yvdRRlHZn1Xd48r4yvgGCIrn5YNxY=
 github.com/satori-protocol-go/satori-model-go v0.0.9/go.mod h1:R+7VkMNjo74rCmvHijpmQywU/Ahc9DcC/0YUCaYYLuE=
+github.com/satori-protocol-go/satori-model-go v0.0.10 h1:gPcahAuC9qu0UE38X4865tUOrvfPiLcDJnX/3heB1NI=
+github.com/satori-protocol-go/satori-model-go v0.0.10/go.mod h1:R+7VkMNjo74rCmvHijpmQywU/Ahc9DcC/0YUCaYYLuE=
 github.com/syndtr/goleveldb v1.0.0 h1:fBdIW9lB4Iz0n9khmH8w27SJ3QEJ7+IgjPEwGSZiFdE=
 github.com/syndtr/goleveldb v1.0.0/go.mod h1:ZVVdQEZoIme9iO1Ch2Jdy24qqXrMMOU6lpPAyBWyWuQ=
 golang.org/x/net v0.0.0-20180906233101-161cd47e91fd/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
